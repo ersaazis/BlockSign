@@ -7,8 +7,7 @@ function LoggedOut() {
   return (
     <div className="container">
       <h1>BlockSign Digital Signature</h1>
-      <h2>You are not authenticated</h2>
-      <p>To log in, click this button!</p>
+      <p>Please Login First!</p>
       <button type="button" id="loginButton" onClick={login}>
         Log in
       </button>

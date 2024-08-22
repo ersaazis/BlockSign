@@ -19,27 +19,71 @@ function LoggedIn() {
   return (
     <div className="container">
       <h1>BlockSign Digital Signature</h1>
-      <h2>You are authenticated!</h2>
-      <p>To see how a canister views you, click this button!</p>
-      <button
-        type="button"
-        id="whoamiButton"
-        className="primary"
-        onClick={handleClick}
-      >
-        Who am I?
-      </button>
-      <input
-        type="text"
-        readOnly
-        id="whoami"
-        value={result}
-        placeholder="your Identity"
-        style={whoamiStyles}
-      />
-      <button id="logout" onClick={logout}>
-        log out
-      </button>
+      <hr />
+      <h3>Upload Document</h3>
+      <div>
+        <input type="file" style={{ width: "90%" }} />
+        <br />
+        <label>
+          <b>Signed By</b>
+        </label>
+        <select name="cars" id="cars" style={{ width: "100%" }} multiple>
+          <option value="volvo">Volvo</option>
+          <option value="saab">Saab</option>
+          <option value="opel">Opel</option>
+          <option value="audi">Audi</option>
+        </select>
+        <br />
+        <br />
+        <button onClick={handleClick}>Save</button>
+      </div>
+      <hr />
+      <h3>My Document</h3>
+      <table border="1">
+        <tbody>
+          <tr>
+            <td>File 1</td>
+            <td>lock</td>
+          </tr>
+          <tr>
+            <td>File 2</td>
+            <td>lock</td>
+          </tr>
+          <tr>
+            <td>File 3</td>
+            <td>lock</td>
+          </tr>
+          <tr>
+            <td>File 4</td>
+            <td>lock</td>
+          </tr>
+          <tr>
+            <td>File 5</td>
+            <td>lock</td>
+          </tr>
+        </tbody>
+      </table>
+      <br />
+      <h3>Requested Signature</h3>
+      <table border="1">
+        <tbody>
+          <tr>
+            <td>File 1</td>
+            <td>sign</td>
+          </tr>
+          <tr>
+            <td>File 2</td>
+            <td>sign</td>
+          </tr>
+          <tr>
+            <td>File 3</td>
+            <td>signed</td>
+          </tr>
+        </tbody>
+      </table>
+      <br />
+      <hr />
+      <button id="logout" onClick={logout}>Log out</button>
     </div>
   );
 }
