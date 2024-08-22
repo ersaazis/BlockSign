@@ -20,6 +20,16 @@ function LoggedIn() {
     <div className="container">
       <h1>BlockSign Digital Signature</h1>
       <hr />
+      <label>
+        <b>Name</b>
+      </label>
+      <input type="text" placeholder="Enter your name" />
+      <label>
+        <b>Role</b>
+      </label>
+      <input type="text" placeholder="Enter your role" />
+      <button onClick={handleProfileSave}>Save Profile</button>
+      <hr />
       <h3>Upload Document</h3>
       <div>
         <input type="file" style={{ width: "90%" }} />
@@ -27,7 +37,7 @@ function LoggedIn() {
         <label>
           <b>Signed By</b>
         </label>
-        <select name="cars" id="cars" style={{ width: "100%" }} multiple>
+        <select multiple="" name="cars" id="cars" style={{ width: "100%" }}>
           <option value="volvo">Volvo</option>
           <option value="saab">Saab</option>
           <option value="opel">Opel</option>
@@ -35,7 +45,7 @@ function LoggedIn() {
         </select>
         <br />
         <br />
-        <button onClick={handleClick}>Save</button>
+        <button onClick={handleDocumentSave}>Save Document</button>
       </div>
       <hr />
       <h3>My Document</h3>
@@ -84,8 +94,7 @@ function LoggedIn() {
       <br />
       <hr />
       <button id="logout" onClick={logout}>Log out</button>
-    </div>
-  );
+    </div>  );
 }
 
 export default LoggedIn;

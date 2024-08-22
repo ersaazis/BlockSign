@@ -36,25 +36,25 @@ actor {
 
   // DATABASE
   type PersonHistoryProfile = {
-    id : Text;
+    id : Principal;
     detail : Text;
     date_change : Int;
   };
   type ListPerson = {
-    id : Text;
+    id : Principal;
     name : Text;
     role : Text;
   };
   type ListDocument = {
     id : Text;
-    owner : Text;
+    owner : Principal;
     document : Blob;
     hashing : Text;
     status : Bool;
   };
   type ListSign = {
     document_id : Text;
-    user_id : Text;
+    user_id : Principal;
     date_sign : Int;
   };
 
@@ -65,10 +65,29 @@ actor {
 
   // AUTH
   public shared query (msg) func whoami() : async Principal {
-        msg.caller
+    let callerId = msg.caller;
+
+    // Check if the caller already exists in the list
+    let personExists = List.some(
+      items,
+      func(person : ListPerson) : Bool {
+        person.id == callerId;
+      },
+    );
+
+    if (personExists) {
+      // If the caller already exists, do nothing and return the callerId
+      return callerId;
+    } else {
+      // If the caller does not exist, add them to the list
+      let newItem : ListPerson = { id = callerId; name = ""; role = "" };
+      items := List.push(newItem, items);
+      return callerId;
     };
+  };
+
   // PERSON
-  public func addPerson(id : Text) : async () {
+  public func addPerson(id : Principal) : async () {
     let newItem : ListPerson = { id = id; name = ""; role = "" };
     items := List.push(newItem, items);
   };
@@ -77,7 +96,7 @@ actor {
     return items;
   };
 
-  public func changePerson(id : Text, newName : Text, newRole : Text) : async Bool {
+  public func changePerson(id : Principal, newName : Text, newRole : Text) : async Bool {
     let (updatedItems, found) = List.foldLeft<ListPerson, (List.List<ListPerson>, Bool)>(
       items,
       (List.nil(), false),
@@ -126,7 +145,7 @@ actor {
   };
 
   // Document
-  public func documentPerson(user_id : Text) : async List.List<ListDocument> {
+  public func documentPerson(user_id : Principal) : async List.List<ListDocument> {
     let userDocuments = List.filter<ListDocument>(
       documents,
       func(doc : ListDocument) : Bool {
@@ -148,7 +167,7 @@ actor {
     return documentsSign;
   };
 
-  public func addDocument(id : Text, owner : Text, document : Blob) : async () {
+  public func addDocument(id : Text, owner : Principal, document : Blob) : async () {
     let newDoc : ListDocument = {
       id = id;
       owner = owner;
@@ -161,7 +180,7 @@ actor {
 
   // Document Signation
 
-  public func documentSign(user_id : Text) : async List.List<ListDocument> {
+  public func documentSign(user_id : Principal) : async List.List<ListDocument> {
     let userSignDocuments = List.filter<ListSign>(
       signs,
       func(sign : ListSign) : Bool {
@@ -186,7 +205,7 @@ actor {
     return signedDocuments;
   };
 
-  public func addPersonDocument(document_id : Text, user_id : Text) : async () {
+  public func addPersonDocument(document_id : Text, user_id : Principal) : async () {
     let newSign : ListSign = {
       document_id = document_id;
       user_id = user_id;
