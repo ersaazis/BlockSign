@@ -1,10 +1,10 @@
 {
-  "name": "dDrive_frontend",
+  "name": "BlockSign_frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "setup": "npm i && dfx canister create dDrive_backend && dfx generate dDrive_backend && dfx deploy",
+    "setup": "npm i && dfx canister create BlockSign_backend && dfx generate BlockSign_backend && dfx deploy",
     "start": "vite --port 3000",
     "prebuild": "dfx generate",
     "build": "tsc && vite build",

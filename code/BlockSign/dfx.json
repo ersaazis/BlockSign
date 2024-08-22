@@ -1,18 +1,18 @@
 {
   "canisters": {
-    "dDrive_backend": {
-      "main": "src/dDrive_backend/main.mo",
+    "BlockSign_backend": {
+      "main": "src/BlockSign_backend/main.mo",
       "type": "motoko"
     },
-    "dDrive_frontend": {
+    "BlockSign_frontend": {
       "dependencies": [
-        "dDrive_backend"
+        "BlockSign_backend"
       ],
       "source": [
-        "src/dDrive_frontend/dist"
+        "src/BlockSign_frontend/dist"
       ],
       "type": "assets",
-      "workspace": "dDrive_frontend"
+      "workspace": "BlockSign_frontend"
     },
     "internet_identity": {
       "candid": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity.did",

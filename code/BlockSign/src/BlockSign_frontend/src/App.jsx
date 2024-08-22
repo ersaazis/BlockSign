@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { dDrive_backend } from 'declarations/dDrive_backend';
+import { BlockSign_backend } from 'declarations/BlockSign_backend';
 
 function App() {
   const [greeting, setGreeting] = useState('');
@@ -7,7 +7,7 @@ function App() {
   function handleSubmit(event) {
     event.preventDefault();
     const name = event.target.elements.name.value;
-    dDrive_backend.greet(name).then((greeting) => {
+    BlockSign_backend.greet(name).then((greeting) => {
       setGreeting(greeting);
     });
     return false;
