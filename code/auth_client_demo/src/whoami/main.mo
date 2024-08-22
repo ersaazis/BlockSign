@@ -87,16 +87,16 @@ actor {
   };
 
   // PERSON
-  public func addPerson(id : Principal) : async () {
+  public query func addPerson(id : Principal) : async () {
     let newItem : ListPerson = { id = id; name = ""; role = "" };
     items := List.push(newItem, items);
   };
 
-  public func getPerson() : async List.List<ListPerson> {
+  public query func getPerson() : async List.List<ListPerson> {
     return items;
   };
 
-  public func changePerson(id : Principal, newName : Text, newRole : Text) : async Bool {
+  public query func changePerson(id : Principal, newName : Text, newRole : Text) : async Bool {
     let (updatedItems, found) = List.foldLeft<ListPerson, (List.List<ListPerson>, Bool)>(
       items,
       (List.nil(), false),
@@ -145,7 +145,7 @@ actor {
   };
 
   // Document
-  public func documentPerson(user_id : Principal) : async List.List<ListDocument> {
+  public query func documentPerson(user_id : Principal) : async List.List<ListDocument> {
     let userDocuments = List.filter<ListDocument>(
       documents,
       func(doc : ListDocument) : Bool {
@@ -156,7 +156,7 @@ actor {
     return userDocuments;
   };
 
-  public func documentStatus(document_id : Text) : async List.List<ListSign> {
+  public query func documentStatus(document_id : Text) : async List.List<ListSign> {
     let documentsSign = List.filter<ListSign>(
       signs,
       func(doc : ListSign) : Bool {
@@ -167,7 +167,7 @@ actor {
     return documentsSign;
   };
 
-  public func addDocument(id : Text, owner : Principal, document : Blob) : async () {
+  public query func addDocument(id : Text, owner : Principal, document : Blob) : async () {
     let newDoc : ListDocument = {
       id = id;
       owner = owner;
@@ -180,7 +180,7 @@ actor {
 
   // Document Signation
 
-  public func documentSign(user_id : Principal) : async List.List<ListDocument> {
+  public query func documentSign(user_id : Principal) : async List.List<ListDocument> {
     let userSignDocuments = List.filter<ListSign>(
       signs,
       func(sign : ListSign) : Bool {
@@ -205,7 +205,7 @@ actor {
     return signedDocuments;
   };
 
-  public func addPersonDocument(document_id : Text, user_id : Principal) : async () {
+  public query func addPersonDocument(document_id : Text, user_id : Principal) : async () {
     let newSign : ListSign = {
       document_id = document_id;
       user_id = user_id;
@@ -214,7 +214,7 @@ actor {
     signs := List.push(newSign, signs);
   };
 
-  public func signDocument(document_id : Text, user_id : Text) : async Bool {
+  public query func signDocument(document_id : Text, user_id : Text) : async Bool {
     let now = Time.now();
     let (updatedSigns, found) = List.foldLeft<ListSign, (List.List<ListSign>, Bool)>(
       signs,
@@ -265,7 +265,7 @@ actor {
   };
 
   // HISTORY
-  public func getHistory(filterId : Text) : async List.List<PersonHistoryProfile> {
+  public query func getHistory(filterId : Text) : async List.List<PersonHistoryProfile> {
     let filteredHistory = List.filter<PersonHistoryProfile>(
       history,
       func(item : PersonHistoryProfile) : Bool {
