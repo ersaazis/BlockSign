@@ -213,7 +213,18 @@ actor {
     return found;
   };
 
-  public func finishSign(user_id : Text, document_id : Text, newDocument : Blob, newHashing : Text) : async Bool {
+  public shared (msg) func finishSign(user_id : Text, document_id : Text, newDocument : Blob) : async Bool {
+    let caller = Principal.toBlob(msg.caller);
+    let message_hash : Blob = Blob.fromArray(SHA256.sha256(Blob.toArray(newDocument)));
+    Cycles.add(25_000_000_000);
+
+    let { signature } = await ic.sign_with_ecdsa({
+      message_hash;
+      derivation_path = [caller];
+      key_id = { curve = #secp256k1; name = "dfx_test_key" };
+    });
+    let signature_hex = Hex.encode(Blob.toArray(signature));
+
     let (updatedDocs, found) = List.foldLeft<ListDocument, (List.List<ListDocument>, Bool)>(
       documents,
       (List.nil(), false),
@@ -224,7 +235,7 @@ actor {
             id = doc.id;
             owner = doc.owner;
             document = newDocument;
-            hashing = newHashing;
+            hashing = signature_hex;
             status = true;
           };
           (List.push(updatedDoc, updatedList), true);
@@ -246,33 +257,20 @@ actor {
     return filteredHistory;
   };
 
-  public shared (msg) func public_key() : async { #Ok : { public_key_hex: Text }; #Err : Text } {
+  public shared (msg) func public_key() : async {
+    #Ok : { public_key_hex : Text };
+    #Err : Text;
+  } {
     let caller = Principal.toBlob(msg.caller);
     try {
       let { public_key } = await ic.ecdsa_public_key({
-          canister_id = null;
-          derivation_path = [ caller ];
-          key_id = { curve = #secp256k1; name = "dfx_test_key" };
+        canister_id = null;
+        derivation_path = [caller];
+        key_id = { curve = #secp256k1; name = "dfx_test_key" };
       });
-      #Ok({ public_key_hex = Hex.encode(Blob.toArray(public_key)) })
+      #Ok({ public_key_hex = Hex.encode(Blob.toArray(public_key)) });
     } catch (err) {
-      #Err(Error.message(err))
-    }
-  };
-
-  public shared (msg) func sign(message: Text) : async { #Ok : { signature_hex: Text };  #Err : Text } {
-    let caller = Principal.toBlob(msg.caller);
-    try {
-      let message_hash: Blob = Blob.fromArray(SHA256.sha256(Blob.toArray(Text.encodeUtf8(message))));
-      Cycles.add(25_000_000_000);
-      let { signature } = await ic.sign_with_ecdsa({
-          message_hash;
-          derivation_path = [ caller ];
-          key_id = { curve = #secp256k1; name = "dfx_test_key" };
-      });
-      #Ok({ signature_hex = Hex.encode(Blob.toArray(signature))})
-    } catch (err) {
-      #Err(Error.message(err))
-    }
+      #Err(Error.message(err));
+    };
   };
 };
