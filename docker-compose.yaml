@@ -1,0 +1,9 @@
+services:
+  icp-dev-env:
+    build: .
+    platform: linux/x86_64
+    volumes:
+      - ./code:/code
+    ports:
+      - 80:80
+    tty: true
