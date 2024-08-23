@@ -64,7 +64,13 @@ actor {
   var history : List.List<PersonHistoryProfile> = List.nil();
   var documents : List.List<ListDocument> = List.nil();
   var signs : List.List<ListSign> = List.nil();
-
+  
+  public func resetAllDocuments() : async () {
+    persons := List.nil();
+    history := List.nil();
+    documents := List.nil();
+    signs := List.nil();
+  };
   // AUTH
   public shared query (msg) func whoami() : async Principal {
     msg.caller;

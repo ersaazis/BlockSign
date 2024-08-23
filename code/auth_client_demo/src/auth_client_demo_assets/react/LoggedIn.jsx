@@ -40,10 +40,12 @@ function LoggedIn() {
     setOptions(names)
   };
 
-  const handleSignDocument = async (docid) => {
+  const handleSignDocument = async (docid, index) => {
     const whoami = await whoamiActor.whoami();
     console.log(docid, whoami);
     await whoamiActor.signDocument(docid, whoami)
+
+    getListDocuments()
   };
 
   const handleDocumentSave = async () => {
@@ -63,7 +65,7 @@ function LoggedIn() {
             selected.forEach(async (el)=> {
               await whoamiActor.addPersonDocument(docs.name, el[0].id)
             })
-            
+            getListDocuments()
         };
 
       reader.readAsArrayBuffer(docs);
@@ -181,7 +183,7 @@ function LoggedIn() {
             sign_documents.map((el, index) => (
               <tr key={index}>
                 <td>{el.id}</td>
-                <td><button onClick={() => handleSignDocument(el.id)}>Sign</button></td>
+                <td><button onClick={() => handleSignDocument(el.id, index)}>Sign</button></td>
                 <td></td>
               </tr>
             ))
