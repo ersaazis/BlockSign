@@ -32,6 +32,7 @@ function LoggedIn() {
   const handleLockDocument = async (document_id, document) => {
     const whoami = await whoamiActor.whoami();
     await whoamiActor.finishSign(whoami, document_id, document)
+    getListDocuments()
   };
 
   const handleProfileSave = async () => {
@@ -40,6 +41,7 @@ function LoggedIn() {
     await whoamiActor.changePerson(whoami, name, role)
 
     let listPersonObj = await whoamiActor.getPerson();
+    console.log(listPersonObj)
     // const names = []
     // listPersonObj.forEach(person => { person.forEach(user => { names.push(user.name) }) });
     setOptions(listPersonObj)
@@ -66,9 +68,9 @@ function LoggedIn() {
       await whoamiActor.addDocument(docs.name, whoami, uint8Array)
 
       const selected = [...options]
-      selected.filter(el => selectedOptions.includes(el[0].name))
+      selected.filter(el => selectedOptions.includes(el.name))
       selected.forEach(async (el) => {
-        await whoamiActor.addPersonDocument(docs.name, el[0].id)
+        await whoamiActor.addPersonDocument(docs.name, el.id)
       })
       getListDocuments()
     };
@@ -124,6 +126,7 @@ function LoggedIn() {
     let listPersonObj = await whoamiActor.getPerson();
     // const names = []
     // listPersonObj.forEach(person => { names.push(person[0]['name'])});
+    console.log(listPersonObj)
     setOptions(listPersonObj)
   }, [])
   return (
@@ -169,7 +172,7 @@ function LoggedIn() {
       <hr />
       <h3>My Documents</h3>
       {person_documents.map((el, index) => (
-        <div key={index}>
+        <div key={index} style={{width: "100%", wordBreak: 'break-all'}}>
           <hr />
           <p>Name :{el.id}</p>
           <p>Action :

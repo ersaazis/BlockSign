@@ -64,7 +64,7 @@ actor {
   var history : List.List<PersonHistoryProfile> = List.nil();
   var documents : List.List<ListDocument> = List.nil();
   var signs : List.List<ListSign> = List.nil();
-  
+
   public func resetAllDocuments() : async () {
     persons := List.nil();
     history := List.nil();
@@ -101,8 +101,8 @@ actor {
     return filteredPerson;
   };
 
-  public func getPerson() : async List.List<ListPerson> {
-    return persons;
+  public func getPerson() : async [ListPerson] {
+    return List.toArray(persons);
   };
 
   public func changePerson(id : Principal, newName : Text, newRole : Text) : async Bool {

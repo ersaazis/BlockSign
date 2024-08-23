@@ -18,8 +18,8 @@ const MultiSelect = ({ options, selectedOptions, setSelectedOptions }) => {
         className="userlist"
       >
         {options.map((option) => (
-          <option key={option} value={option[0].name}>
-            {option[0].name}
+          <option key={option} value={option.name}>
+            {option.name}
           </option>
         ))}
       </select>
