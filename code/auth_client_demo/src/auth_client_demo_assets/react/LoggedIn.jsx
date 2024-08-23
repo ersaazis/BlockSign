@@ -29,9 +29,9 @@ function LoggedIn() {
     }
   };
 
-  const handleLockDocument = async (handleLockDocument) => {
+  const handleLockDocument = async (document_id, document) => {
     const whoami = await whoamiActor.whoami();
-    setResult(whoami);
+    await whoamiActor.finishSign(whoami, document_id, document)
   };
 
   const handleProfileSave = async () => {
@@ -164,13 +164,17 @@ function LoggedIn() {
         <tbody>
           {
             person_documents.map((el, index) => (
-              <td>
-                {el.status ? (
-                  "Locked"
-                ) : (
-                  <button onClick={() => handleLockDocument(el.id, index)}>Lock</button>
-                )}
-              </td>
+              <tr key={index}>
+                <td>{el.id}</td>
+                <td>
+                  {el.status ? (
+                    "Locked"
+                  ) : (
+                    <button onClick={() => handleLockDocument(el.id, el.document)}>Lock</button>
+                  )}
+                </td>
+                <td><button>Download</button></td>
+              </tr>
             ))
           }
         </tbody>
