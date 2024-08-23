@@ -82,7 +82,7 @@ function LoggedIn() {
     const whoami = await whoamiActor.whoami();
     let listDocumentsObj = await whoamiActor.documentPerson(whoami);
     let listSignObj = await whoamiActor.documentSign(whoami);
-    console.log(listDocumentsObj);
+    console.log(listSignObj);
     setPersonDocuments(listDocumentsObj)
     setSignDocuments(listSignObj)
   };
@@ -92,6 +92,21 @@ function LoggedIn() {
     if (file) {
       setDocs(file)
     }
+  }
+
+  const handleDownloads = (el) => {
+    console.log(el)
+    const blob = new Blob([el.document], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+
+    // Create a link element and trigger the download
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${el.hashing == "" ? el.id : el.hashing}`; // Specify the file name
+    link.click();
+
+    // Clean up
+    URL.revokeObjectURL(url);
   }
 
   useEffect(async () => {
@@ -162,10 +177,10 @@ function LoggedIn() {
               "Locked"
             ) : (
               <button onClick={() => handleLockDocument(el.id, el.document)}>Lock</button>
-            )} <button>Download</button>
+            )} <button onClick={()=>handleDownloads(el)}>Download</button>
           </p>
           <b>Signature</b>
-          <p>{el.hashing}</p>
+          <p>{el.hashing == "" ? "no signature" : el.hashing}</p>
           <hr />
         </div>
       ))}
