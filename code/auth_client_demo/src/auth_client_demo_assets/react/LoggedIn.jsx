@@ -43,9 +43,13 @@ function LoggedIn() {
 
 
   useEffect(async ()=> {
-    const whoami = await whoamiActor.getPerson();
-    await whoamiActor.addPerson(whoami)
+    const whoami = await whoamiActor.whoami();
     console.log(whoami)
+    await whoamiActor.addPerson(whoami)
+    const myPerson = await whoamiActor.myPerson(whoami)
+    setName(myPerson[0][0]['name'])
+    setRole(myPerson[0][0]['role'])
+    
     console.log("test")
 
     let listPersonObj = await whoamiActor.getPerson();

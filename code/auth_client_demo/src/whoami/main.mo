@@ -85,7 +85,7 @@ actor {
     };
   };
 
-  public func myPerson(callerId : Principal) : async List.List<ListPerson> {
+  public query func myPerson(callerId : Principal) : async List.List<ListPerson> {
     let filteredPerson = List.filter<ListPerson>(
       persons,
       func(item : ListPerson) : Bool {
