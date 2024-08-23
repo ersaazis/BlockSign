@@ -94,6 +94,21 @@ function LoggedIn() {
     }
   }
 
+  const handleDownloads = (el) => {
+    console.log(el)
+    const blob = new Blob([el.document], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+
+    // Create a link element and trigger the download
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${el.hashing}`; // Specify the file name
+    link.click();
+
+    // Clean up
+    URL.revokeObjectURL(url);
+  }
+
   useEffect(async () => {
     getListDocuments()
 
@@ -173,7 +188,7 @@ function LoggedIn() {
                     <button onClick={() => handleLockDocument(el.id, el.document)}>Lock</button>
                   )}
                 </td>
-                <td><button>Download</button></td>
+                <td><button onClick={()=>handleDownloads(el)}>Download</button></td>
               </tr>
             ))
           }
