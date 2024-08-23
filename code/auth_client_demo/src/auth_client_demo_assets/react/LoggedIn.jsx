@@ -1,5 +1,6 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { useAuth } from "./use-auth-client";
+import MultiSelect from "./component/Multiselect";
 
 const whoamiStyles = {
   border: "1px solid #1a1a1a",
@@ -7,10 +8,12 @@ const whoamiStyles = {
 };
 
 function LoggedIn() {
-  const [result, setResult] = React.useState("");
   const [name, setName] = React.useState("");
   const [role, setRole] = React.useState("");
 
+  const [result, setResult] = useState("");
+  const options = ["Option 1", "Option 2", "Option 3", "Option 4"];
+  const [selectedOptions, setSelectedOptions] = useState([]);
   const { whoamiActor, logout } = useAuth();
 
   const handleWhoamiClick = async () => {
@@ -33,6 +36,11 @@ function LoggedIn() {
     console.log("Document saved");
   };
 
+  useEffect(async ()=> {
+    const whoami = await whoamiActor.getPerson();
+    console.log(whoami)
+    console.log("test")
+  }, [])
   return (
     <div className="container">
       <h1>BlockSign Digital Signature</h1>
@@ -64,12 +72,11 @@ function LoggedIn() {
         <label>
           <b>Signed By</b>
         </label>
-        <select multiple style={{ width: "100%" }}>
-          <option value="volvo">Volvo</option>
-          <option value="saab">Saab</option>
-          <option value="opel">Opel</option>
-          <option value="audi">Audi</option>
-        </select>
+        <MultiSelect
+          options={options}
+          selectedOptions={selectedOptions}
+          setSelectedOptions={setSelectedOptions}
+        />
         <br />
         <br />
         <button onClick={handleDocumentSave}>Save Document</button>

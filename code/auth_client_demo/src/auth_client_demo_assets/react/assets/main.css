@@ -424,3 +424,7 @@ header {
 .hidden * {
   display: none;
 }
+
+.userlist {
+  width: 100%;
+}
