@@ -12,7 +12,7 @@ function LoggedIn() {
   const [role, setRole] = React.useState("");
 
   const [result, setResult] = useState("");
-  const options = ["Option 1", "Option 2", "Option 3", "Option 4"];
+  const [options, setOptions] = useState([])
   const [selectedOptions, setSelectedOptions] = useState([]);
   const { whoamiActor, logout } = useAuth();
 
@@ -29,6 +29,11 @@ function LoggedIn() {
     const whoami = await whoamiActor.whoami();
     await whoamiActor.addPerson(whoami)
     await whoamiActor.changePerson(whoami,name,role)
+
+    let listPersonObj = await whoamiActor.getPerson();
+    const names = []
+    listPersonObj.forEach(person => {person.forEach(user => {names.push(user.name)})});
+    setOptions(names)
   };
 
   const handleDocumentSave = () => {
@@ -36,9 +41,17 @@ function LoggedIn() {
     console.log("Document saved");
   };
 
+
   useEffect(async ()=> {
     const whoami = await whoamiActor.getPerson();
     await whoamiActor.addPerson(whoami)
+    console.log(whoami)
+    console.log("test")
+
+    let listPersonObj = await whoamiActor.getPerson();
+    const names = []
+    listPersonObj.forEach(person => {person.forEach(user => {names.push(user.name)})});
+    setOptions(names)
   }, [])
   return (
     <div className="container">
