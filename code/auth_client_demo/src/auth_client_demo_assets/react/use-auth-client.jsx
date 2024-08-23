@@ -14,7 +14,7 @@ export const getIdentityProvider = () => {
     if (isLocal && isSafari) {
       idpProvider = `http://localhost:4943/?canisterId=${process.env.CANISTER_ID_INTERNET_IDENTITY}`;
     } else if (isLocal) {
-      idpProvider = `http://${process.env.CANISTER_ID_INTERNET_IDENTITY}.localhost:4943`;
+      idpProvider = `http://${process.env.CANISTER_ID_INTERNET_IDENTITY}.localhost:80`;
     }
   }
   return idpProvider;

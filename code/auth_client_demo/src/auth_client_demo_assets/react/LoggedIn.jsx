@@ -8,12 +8,29 @@ const whoamiStyles = {
 
 function LoggedIn() {
   const [result, setResult] = React.useState("");
+  const [name, setName] = React.useState("");
+  const [role, setRole] = React.useState("");
 
   const { whoamiActor, logout } = useAuth();
 
-  const handleClick = async () => {
+  const handleWhoamiClick = async () => {
+    try {
+      const whoami = await whoamiActor.whoami();
+      setResult(whoami);
+    } catch (error) {
+      console.error("Failed to fetch whoami:", error);
+    }
+  };
+
+  const handleProfileSave = async () => {
     const whoami = await whoamiActor.whoami();
-    setResult(whoami);
+    await whoamiActor.addPerson(whoami)
+    await whoamiActor.changePerson(whoami,name,role)
+  };
+
+  const handleDocumentSave = () => {
+    // Implement logic to save the document
+    console.log("Document saved");
   };
 
   return (
@@ -23,11 +40,21 @@ function LoggedIn() {
       <label>
         <b>Name</b>
       </label>
-      <input type="text" placeholder="Enter your name" />
+      <input
+        type="text"
+        placeholder="Enter your name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
       <label>
         <b>Role</b>
       </label>
-      <input type="text" placeholder="Enter your role" />
+      <input
+        type="text"
+        placeholder="Enter your role"
+        value={role}
+        onChange={(e) => setRole(e.target.value)}
+      />
       <button onClick={handleProfileSave}>Save Profile</button>
       <hr />
       <h3>Upload Document</h3>
@@ -37,7 +64,7 @@ function LoggedIn() {
         <label>
           <b>Signed By</b>
         </label>
-        <select multiple="" name="cars" id="cars" style={{ width: "100%" }}>
+        <select multiple style={{ width: "100%" }}>
           <option value="volvo">Volvo</option>
           <option value="saab">Saab</option>
           <option value="opel">Opel</option>
@@ -48,7 +75,7 @@ function LoggedIn() {
         <button onClick={handleDocumentSave}>Save Document</button>
       </div>
       <hr />
-      <h3>My Document</h3>
+      <h3>My Documents</h3>
       <table border="1">
         <tbody>
           <tr>
@@ -74,7 +101,7 @@ function LoggedIn() {
         </tbody>
       </table>
       <br />
-      <h3>Requested Signature</h3>
+      <h3>Requested Signatures</h3>
       <table border="1">
         <tbody>
           <tr>
@@ -93,8 +120,11 @@ function LoggedIn() {
       </table>
       <br />
       <hr />
-      <button id="logout" onClick={logout}>Log out</button>
-    </div>  );
+      <button id="logout" onClick={logout}>
+        Log out
+      </button>
+    </div>
+  );
 }
 
 export default LoggedIn;
