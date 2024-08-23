@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "./use-auth-client";
 import MultiSelect from "./component/Multiselect";
 
@@ -10,6 +10,9 @@ const whoamiStyles = {
 function LoggedIn() {
   const [name, setName] = React.useState("");
   const [role, setRole] = React.useState("");
+
+  const [person_documents, setPersonDocuments] = useState([]);
+  const [sign_documents, setSignDocuments] = useState([]);
 
   const [result, setResult] = useState("");
   const [options, setOptions] = useState([])
@@ -28,12 +31,18 @@ function LoggedIn() {
   const handleProfileSave = async () => {
     const whoami = await whoamiActor.whoami();
     await whoamiActor.addPerson(whoami)
-    await whoamiActor.changePerson(whoami,name,role)
+    await whoamiActor.changePerson(whoami, name, role)
 
     let listPersonObj = await whoamiActor.getPerson();
     const names = []
-    listPersonObj.forEach(person => {person.forEach(user => {names.push(user.name)})});
+    listPersonObj.forEach(person => { person.forEach(user => { names.push(user.name) }) });
     setOptions(names)
+  };
+
+  const handleSignDocument = async (docid) => {
+    const whoami = await whoamiActor.whoami();
+    console.log(docid, whoami);
+    await whoamiActor.signDocument(docid, whoami)
   };
 
   const handleDocumentSave = () => {
@@ -41,20 +50,30 @@ function LoggedIn() {
     console.log("Document saved");
   };
 
+  const getListDocuments = async () => {
+    const whoami = await whoamiActor.whoami();
+    let listDocumentsObj = await whoamiActor.documentPerson(whoami);
+    let listSignObj = await whoamiActor.documentSign(whoami);
+    console.log(listDocumentsObj);
+    setPersonDocuments(listDocumentsObj)
+    setSignDocuments(listSignObj)
+  };
 
-  useEffect(async ()=> {
+  useEffect(async () => {
+    getListDocuments()
+
     const whoami = await whoamiActor.whoami();
     console.log(whoami)
     await whoamiActor.addPerson(whoami)
     const myPerson = await whoamiActor.myPerson(whoami)
     setName(myPerson[0][0]['name'])
     setRole(myPerson[0][0]['role'])
-    
+
     console.log("test")
 
     let listPersonObj = await whoamiActor.getPerson();
     const names = []
-    listPersonObj.forEach(person => {person.forEach(user => {names.push(user.name)})});
+    listPersonObj.forEach(person => { person.forEach(user => { names.push(user.name) }) });
     setOptions(names)
   }, [])
   return (
@@ -99,46 +118,46 @@ function LoggedIn() {
       </div>
       <hr />
       <h3>My Documents</h3>
-      <table border="1">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Action</th>
+            <th></th>
+          </tr>
+        </thead>
         <tbody>
-          <tr>
-            <td>File 1</td>
-            <td>lock</td>
-          </tr>
-          <tr>
-            <td>File 2</td>
-            <td>lock</td>
-          </tr>
-          <tr>
-            <td>File 3</td>
-            <td>lock</td>
-          </tr>
-          <tr>
-            <td>File 4</td>
-            <td>lock</td>
-          </tr>
-          <tr>
-            <td>File 5</td>
-            <td>lock</td>
-          </tr>
+          {
+            person_documents.map((el, index) => (
+              <tr key={index}>
+                <td>{el.id}</td>
+                <td><button>Lock</button></td>
+                <td><button>Download</button></td>
+              </tr>
+            ))
+          }
         </tbody>
       </table>
       <br />
       <h3>Requested Signatures</h3>
-      <table border="1">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Action</th>
+            <th>Signature</th>
+          </tr>
+        </thead>
         <tbody>
-          <tr>
-            <td>File 1</td>
-            <td>sign</td>
-          </tr>
-          <tr>
-            <td>File 2</td>
-            <td>sign</td>
-          </tr>
-          <tr>
-            <td>File 3</td>
-            <td>signed</td>
-          </tr>
+          {
+            sign_documents.map((el, index) => (
+              <tr key={index}>
+                <td>{el.id}</td>
+                <td><button onClick={() => handleSignDocument(el.id)}>Sign</button></td>
+                <td></td>
+              </tr>
+            ))
+          }
         </tbody>
       </table>
       <br />

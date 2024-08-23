@@ -183,11 +183,11 @@ actor {
 
   // Document Signation
 
-  public func documentSign(user_id : Principal) : async List.List<ListDocument> {
+  public func documentSign(user_id : Principal) : async [ListDocument] {
     let userSignDocuments = List.filter<ListSign>(
       signs,
       func(sign : ListSign) : Bool {
-        sign.user_id == user_id;
+        sign.user_id == user_id and sign.date_sign == 0;
       },
     );
 
@@ -205,7 +205,7 @@ actor {
       },
     );
 
-    return signedDocuments;
+    return List.toArray(signedDocuments);
   };
 
   public func addPersonDocument(document_id : Text, user_id : Principal) : async () {
@@ -217,7 +217,7 @@ actor {
     signs := List.push(newSign, signs);
   };
 
-  public func signDocument(document_id : Text, user_id : Text) : async Bool {
+  public func signDocument(document_id : Text, user_id : Principal) : async Bool {
     let now = Time.now();
     let (updatedSigns, found) = List.foldLeft<ListSign, (List.List<ListSign>, Bool)>(
       signs,
