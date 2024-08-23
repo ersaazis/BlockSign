@@ -148,7 +148,7 @@ actor {
   };
 
   // Document
-  public func documentPerson(user_id : Principal) : async List.List<ListDocument> {
+  public func documentPerson(user_id : Principal) : async [ListDocument] {
     let userDocuments = List.filter<ListDocument>(
       documents,
       func(doc : ListDocument) : Bool {
@@ -156,10 +156,10 @@ actor {
       },
     );
 
-    return userDocuments;
+    return List.toArray(userDocuments);
   };
 
-  public func documentStatus(document_id : Text) : async List.List<ListSign> {
+  public func documentStatus(document_id : Text) : async [ListSign] {
     let documentsSign = List.filter<ListSign>(
       signs,
       func(doc : ListSign) : Bool {
@@ -167,7 +167,7 @@ actor {
       },
     );
 
-    return documentsSign;
+    return List.toArray(documentsSign);
   };
 
   public func addDocument(id : Text, owner : Principal, document : Blob) : async () {
