@@ -85,6 +85,16 @@ actor {
     };
   };
 
+  public func myPerson(callerId : Principal) : async List.List<ListPerson> {
+    let filteredPerson = List.filter<ListPerson>(
+      persons,
+      func(item : ListPerson) : Bool {
+        item.id == callerId;
+      },
+    );
+    return filteredPerson;
+  };
+
   public func getPerson() : async List.List<ListPerson> {
     return persons;
   };

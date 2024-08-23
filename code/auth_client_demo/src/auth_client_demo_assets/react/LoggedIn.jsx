@@ -38,8 +38,7 @@ function LoggedIn() {
 
   useEffect(async ()=> {
     const whoami = await whoamiActor.getPerson();
-    console.log(whoami)
-    console.log("test")
+    await whoamiActor.addPerson(whoami)
   }, [])
   return (
     <div className="container">
