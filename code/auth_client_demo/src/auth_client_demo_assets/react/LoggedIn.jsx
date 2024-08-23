@@ -29,15 +29,20 @@ function LoggedIn() {
     }
   };
 
+  const handleLockDocument = async (handleLockDocument) => {
+    const whoami = await whoamiActor.whoami();
+    setResult(whoami);
+  };
+
   const handleProfileSave = async () => {
     const whoami = await whoamiActor.whoami();
     await whoamiActor.addPerson(whoami)
     await whoamiActor.changePerson(whoami, name, role)
 
     let listPersonObj = await whoamiActor.getPerson();
-    const names = []
-    listPersonObj.forEach(person => { person.forEach(user => { names.push(user.name) }) });
-    setOptions(names)
+    // const names = []
+    // listPersonObj.forEach(person => { person.forEach(user => { names.push(user.name) }) });
+    setOptions(listPersonObj)
   };
 
   const handleSignDocument = async (docid, index) => {
@@ -52,23 +57,23 @@ function LoggedIn() {
     // Implement logic to save the document
     const whoami = await whoamiActor.whoami()
     const reader = new FileReader();
-        
-        reader.onload = async function(e) {
-            const fileContent = e.target.result;
-            console.log('File content:', fileContent);
-            // You can further process the file content here
-            const uint8Array = new Uint8Array(fileContent);
-            await whoamiActor.addDocument(docs.name, whoami, uint8Array)
 
-            const selected = [...options]
-            selected.filter(el => selectedOptions.includes(el[0].name) )
-            selected.forEach(async (el)=> {
-              await whoamiActor.addPersonDocument(docs.name, el[0].id)
-            })
-            getListDocuments()
-        };
+    reader.onload = async function (e) {
+      const fileContent = e.target.result;
+      console.log('File content:', fileContent);
+      // You can further process the file content here
+      const uint8Array = new Uint8Array(fileContent);
+      await whoamiActor.addDocument(docs.name, whoami, uint8Array)
 
-      reader.readAsArrayBuffer(docs);
+      const selected = [...options]
+      selected.filter(el => selectedOptions.includes(el[0].name))
+      selected.forEach(async (el) => {
+        await whoamiActor.addPersonDocument(docs.name, el[0].id)
+      })
+      getListDocuments()
+    };
+
+    reader.readAsArrayBuffer(docs);
     // await addDocument()
     console.log("Document saved");
   };
@@ -85,10 +90,10 @@ function LoggedIn() {
   const getFile = (event) => {
     const file = event.target.files[0]; // Get the first selected file
     if (file) {
-        setDocs(file)
+      setDocs(file)
     }
   }
-  
+
   useEffect(async () => {
     getListDocuments()
 
@@ -132,7 +137,7 @@ function LoggedIn() {
       <hr />
       <h3>Upload Document</h3>
       <div>
-        <input type="file" style={{ width: "90%" }} accept=".pdf" onChange={getFile}/>
+        <input type="file" style={{ width: "90%" }} accept=".pdf" onChange={getFile} />
         <br />
         <label>
           <b>Signed By</b>
@@ -159,11 +164,13 @@ function LoggedIn() {
         <tbody>
           {
             person_documents.map((el, index) => (
-              <tr key={index}>
-                <td>{el.id}</td>
-                <td><button>Lock</button></td>
-                <td><button>Download</button></td>
-              </tr>
+              <td>
+                {el.status ? (
+                  "Locked"
+                ) : (
+                  <button onClick={() => handleLockDocument(el.id, index)}>Lock</button>
+                )}
+              </td>
             ))
           }
         </tbody>

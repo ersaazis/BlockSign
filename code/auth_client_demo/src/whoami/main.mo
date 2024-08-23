@@ -240,7 +240,7 @@ actor {
     return found;
   };
 
-  public shared (msg) func finishSign(user_id : Text, document_id : Text, newDocument : Blob) : async Bool {
+  public shared (msg) func finishSign(user_id : Principal, document_id : Text, newDocument : Blob) : async Bool {
     let caller = Principal.toBlob(msg.caller);
     let message_hash : Blob = Blob.fromArray(SHA256.sha256(Blob.toArray(newDocument)));
     Cycles.add(25_000_000_000);
