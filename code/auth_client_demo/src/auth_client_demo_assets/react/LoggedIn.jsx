@@ -153,32 +153,22 @@ function LoggedIn() {
       </div>
       <hr />
       <h3>My Documents</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Action</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            person_documents.map((el, index) => (
-              <tr key={index}>
-                <td>{el.id}</td>
-                <td>
-                  {el.status ? (
-                    "Locked"
-                  ) : (
-                    <button onClick={() => handleLockDocument(el.id, el.document)}>Lock</button>
-                  )}
-                </td>
-                <td><button>Download</button></td>
-              </tr>
-            ))
-          }
-        </tbody>
-      </table>
+      {person_documents.map((el, index) => (
+        <div key={index}>
+          <hr />
+          <p>Name :{el.id}</p>
+          <p>Action :
+            {el.status ? (
+              "Locked"
+            ) : (
+              <button onClick={() => handleLockDocument(el.id, el.document)}>Lock</button>
+            )} <button>Download</button>
+          </p>
+          <b>Signature</b>
+          <p>{el.hashing}</p>
+          <hr />
+        </div>
+      ))}
       <br />
       <h3>Requested Signatures</h3>
       <table>
@@ -186,7 +176,6 @@ function LoggedIn() {
           <tr>
             <th>Name</th>
             <th>Action</th>
-            <th>Signature</th>
           </tr>
         </thead>
         <tbody>
@@ -195,7 +184,6 @@ function LoggedIn() {
               <tr key={index}>
                 <td>{el.id}</td>
                 <td><button onClick={() => handleSignDocument(el.id, index)}>Sign</button></td>
-                <td></td>
               </tr>
             ))
           }
